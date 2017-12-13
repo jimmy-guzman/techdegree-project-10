@@ -63,7 +63,7 @@ function renderModal(index) {
     employeeHTML += '</div>';
     overlay.style.display = 'flex';
     $('.overlay').html(employeeHTML);
-    
+
     document.querySelector('.close').addEventListener('click', function () {
         overlay.style.display = 'none';
     });
@@ -120,12 +120,11 @@ document.querySelector('input').addEventListener('input', function () {
         let employee = ul.getElementsByTagName('LI')[0];
         employee = employee.innerText.toLowerCase();
 
-       if (employee.indexOf(this.value) > -1) {
-        employees[i].style.display = "flex";
-       } else {
-        employees[i].style.display = "none"; 
-       }
-       
+        if (employee.indexOf(this.value) > -1) {
+            employees[i].style.display = "flex";
+        } else {
+            employees[i].style.display = "none";
+        }
+
     }
 });
-
