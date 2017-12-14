@@ -1,14 +1,15 @@
 const overlay = document.querySelector(".overlay");
 const employeesHTML = document.querySelector(".main-container");
+const searchInput = document.querySelector("input");
 let employeeData = {};
 
 // get employee data
 $.ajax({
-  url:
-    "https://randomuser.me/api/?results=12&nat=us&inc=picture,name,email,location,cell,dob,login",
+  url: "https://randomuser.me/api/?results=12&nat=us&inc=picture,name,email,location,cell,dob,login",
   dataType: "json",
-  success: function(response) {
+  success: function (response) {
     employeeData = response.results;
+    filteredEmployeeData = employeeData;
     cards.render();
   }
 });
@@ -25,9 +26,10 @@ function uppercase(string) {
 // modal methods
 const modal = {
   position: 0,
-  render: function(index) {
+  render: function (index) {
     modal.position = index;
-    let dob = function() {
+
+    let dob = function () {
       let dob = employeeData[index].dob.split(" ");
       let array = dob[0].split("-");
       let temp = array.shift();
@@ -62,53 +64,81 @@ const modal = {
       "</li>";
     employeeHTML += "<li>" + "Birthday: " + dob() + "</li>";
     employeeHTML += "</ul>";
+
+
     employeeHTML += "</div>";
     overlay.style.display = "flex";
     $(".overlay").html(employeeHTML);
     modal.setUpEventListeners();
   },
-  next: function() {
+  next: function () {
     if (modal.position === employeeData.length - 1) {
       modal.position = 0;
     } else {
       modal.position++;
     }
-    modal.render(modal.position);
+
+
+    if (employeeData[modal.position].render || typeof employeeData[modal.position].render === "undefined") {
+      modal.render(modal.position);
+    } else {
+      modal.render(find(modal.position));
+    }
+
   },
-  previous: function() {
+  previous: function () {
     if (modal.position === 0) {
       modal.position = employeeData.length - 1;
     } else {
       modal.position--;
     }
-    modal.render(modal.position);
+    // if (employeeData[modal.position].render || typeof employeeData[modal.position].render === "undefined") {
+    //   modal.render(modal.position);
+    // } else {
+    //   modal.render(find(modal.position));
+    // }
   },
-  setUpEventListeners: function() {
-    document.querySelector(".close").addEventListener("click", function() {
+  setUpEventListeners: function () {
+    document.querySelector(".close").addEventListener("click", function () {
+      document.querySelector('body').style.overflow = "scroll";
       overlay.style.display = "none";
     });
-    document.querySelector(".close").addEventListener("mouseover", function() {
+    document.querySelector(".close").addEventListener("mouseover", function () {
       document.querySelector(".modal").style.opacity = ".7";
     });
-    document.querySelector(".close").addEventListener("mouseout", function() {
+    document.querySelector(".close").addEventListener("mouseout", function () {
       document.querySelector(".modal").style.opacity = "1";
     });
-    document
-      .querySelector(".arrow-right")
-      .addEventListener("click", modal.next);
-      document.querySelector
+    if (document
+      .querySelector(".arrow-right")) {
+      document
+        .querySelector(".arrow-right")
+        .addEventListener("click", modal.next);
+    }
+
+    document.querySelector
     document
       .querySelector(".arrow-left")
       .addEventListener("click", modal.previous);
   }
 };
 
+
+// function find(value) {
+
+//   for (let i = value; i < employeeData.length - 1; i++) {
+//     if (employeeData[i].render ) {
+//       return i;
+//     } 
+//   }
+// }
+
 //cards methods
 const cards = {
-  render: function() {
+  render: function () {
     let employeeHTML = "";
 
-    $.each(employeeData, function(i, employee) {
+    $.each(employeeData, function (i, employee) {
       employeeHTML += '<div class="employee-card">';
       employeeHTML += '<img src="' + employee.picture.large + '">';
       employeeHTML += "<ul>";
@@ -127,7 +157,7 @@ const cards = {
     $(".main-container").html(employeeHTML);
     cards.setUpEventListeners();
   },
-  index: function(target) {
+  index: function (target) {
     let items = employeesHTML.children;
 
     for (let i = items.length - 1; i >= 0; i--) {
@@ -136,7 +166,8 @@ const cards = {
       }
     }
   },
-  filter: function(value) {
+  filter: function (value) {
+
     let employeeCards = document.querySelectorAll(".employee-card");
 
     for (let i = 0; i < employeeCards.length; i++) {
@@ -146,20 +177,24 @@ const cards = {
 
       if (employee.indexOf(value) > -1) {
         employeeCards[i].style.display = "flex";
+        employeeData[i].render = true;
       } else {
         employeeCards[i].style.display = "none";
+        employeeData[i].render = false;
       }
     }
   },
-  setUpEventListeners: function() {
-    $(".main-container").on("click", ".employee-card", function(el) {
+  setUpEventListeners: function () {
+    $(".main-container").on("click", ".employee-card", function (el) {
       let index = cards.index(this);
+      searchInput.value = '';
+      cards.filter('');
+      document.querySelector('body').style.overflow = "hidden";
       modal.render(index);
     });
-    document.querySelector("input").addEventListener("input", function() {
-      cards.filter(this.value);
+    searchInput.addEventListener("input", function () {
+
+      cards.filter(this.value.toLowerCase());
     });
   }
 };
-
-
