@@ -9,7 +9,6 @@ $.ajax({
   dataType: "json",
   success: function (response) {
     employeeData = response.results;
-    filteredEmployeeData = employeeData;
     cards.render();
   }
 });
@@ -77,14 +76,7 @@ const modal = {
     } else {
       modal.position++;
     }
-
-
-    if (employeeData[modal.position].render || typeof employeeData[modal.position].render === "undefined") {
-      modal.render(modal.position);
-    } else {
-      modal.render(find(modal.position));
-    }
-
+    modal.render(modal.position);
   },
   previous: function () {
     if (modal.position === 0) {
@@ -92,11 +84,7 @@ const modal = {
     } else {
       modal.position--;
     }
-    // if (employeeData[modal.position].render || typeof employeeData[modal.position].render === "undefined") {
-    //   modal.render(modal.position);
-    // } else {
-    //   modal.render(find(modal.position));
-    // }
+    modal.render(modal.position);
   },
   setUpEventListeners: function () {
     document.querySelector(".close").addEventListener("click", function () {
@@ -109,29 +97,13 @@ const modal = {
     document.querySelector(".close").addEventListener("mouseout", function () {
       document.querySelector(".modal").style.opacity = "1";
     });
-    if (document
-      .querySelector(".arrow-right")) {
-      document
-        .querySelector(".arrow-right")
-        .addEventListener("click", modal.next);
-    }
 
-    document.querySelector
-    document
-      .querySelector(".arrow-left")
-      .addEventListener("click", modal.previous);
+    document.querySelector(".arrow-right").addEventListener("click", modal.next);
+
+    document.querySelector(".arrow-left").addEventListener("click", modal.previous);
   }
 };
 
-
-// function find(value) {
-
-//   for (let i = value; i < employeeData.length - 1; i++) {
-//     if (employeeData[i].render ) {
-//       return i;
-//     } 
-//   }
-// }
 
 //cards methods
 const cards = {
@@ -177,10 +149,10 @@ const cards = {
 
       if (employee.indexOf(value) > -1) {
         employeeCards[i].style.display = "flex";
-        employeeData[i].render = true;
+
       } else {
         employeeCards[i].style.display = "none";
-        employeeData[i].render = false;
+
       }
     }
   },
