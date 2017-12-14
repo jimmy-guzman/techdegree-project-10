@@ -166,6 +166,8 @@ ul {
   font-size: 36px;
   line-height: 0.5;
   color: #00897b;
+  cursor: pointer;
+  user-select: none;
 }
 
 .arrow {
@@ -176,6 +178,8 @@ ul {
   font-size: 36px;
   line-height: 0.5;
   transition: 0.3s cubic-bezier(1, 0.8, 0.25, 0.25);
+  cursor: pointer;
+  user-select: none;
 }
 
 .arrow-right {
@@ -188,7 +192,6 @@ ul {
 
 .close:hover,
 .arrow:hover {
-  cursor: pointer;
   transform: scale(0.95);
 }
 
