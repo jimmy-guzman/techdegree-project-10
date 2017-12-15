@@ -7,14 +7,14 @@ let employeeData = {};
 $.ajax({
   url: "https://randomuser.me/api/?results=12&nat=us&inc=picture,name,email,location,cell,dob,login",
   dataType: "json",
-  success: function (response) {
+  success: (response) => {
     employeeData = response.results;
     cards.render();
   }
 });
 
 // return uppercased word/words
-function uppercase(string) {
+uppercase = (string) => {
   let array = string.split(" ");
   for (let i = 0; i < array.length; i++) {
     array[i] = array[i].charAt(0).toUpperCase() + array[i].slice(1);
@@ -25,52 +25,39 @@ function uppercase(string) {
 // modal methods
 const modal = {
   position: 0,
-  render: function (index) {
+  render: (index) => {
     modal.position = index;
 
-    let dob = function () {
+    let dob = () => {
       let dob = employeeData[index].dob.split(" ");
       let array = dob[0].split("-");
       let temp = array.shift();
       array.push(temp);
       return array.join("/");
     };
-    let employeeHTML = "";
-    employeeHTML += '<div class="modal">';
-    employeeHTML += '<span class="close"> &times;</span>';
-    employeeHTML += '<span class="arrow arrow-right"> &rarr; </span>';
-    employeeHTML += '<span class="arrow arrow-left"> &larr; </span>';
-    employeeHTML += '<img src="' + employeeData[index].picture.large + '">';
-    employeeHTML += "<ul>";
-    employeeHTML +=
-      "<li>" +
-      uppercase(employeeData[index].name.first) +
-      " " +
-      uppercase(employeeData[index].name.last) +
-      "</li>";
-    employeeHTML += "<li>" + employeeData[index].email + "</li>";
-    employeeHTML +=
-      "<li>" + uppercase(employeeData[index].location.city) + "</li>";
-    employeeHTML += "<hr>";
-    employeeHTML += "<li>" + employeeData[index].cell + "</li>";
-    employeeHTML +=
-      "<li>" +
-      uppercase(employeeData[index].location.street) +
-      ", " +
-      uppercase(employeeData[index].location.state) +
-      " " +
-      employeeData[index].location.postcode +
-      "</li>";
-    employeeHTML += "<li>" + "Birthday: " + dob() + "</li>";
-    employeeHTML += "</ul>";
 
+    let employeeHTML =
+      `<div class="modal">
+        <span class="close">&times;</span>
+        <span class="arrow arrow-right"> &rarr; </span>
+        <span class="arrow arrow-left"> &larr; </span>
+        <img src="${employeeData[index].picture.large}">
+        <ul>
+            <li>${uppercase(employeeData[index].name.first)} ${uppercase(employeeData[index].name.last)} </li>
+            <li>${employeeData[index].email}</li>
+            <li>${uppercase(employeeData[index].location.city)}</li>     
+        <hr>
+            <li>${employeeData[index].cell}</li>
+            <li>${uppercase(employeeData[index].location.street)}, ${uppercase(employeeData[index].location.state)} ${employeeData[index].location.postcode}</li>
+            <li>Birthday: ${dob()}</li>
+        </ul>
+      </div>`;
 
-    employeeHTML += "</div>";
     overlay.style.display = "flex";
     $(".overlay").html(employeeHTML);
     modal.setUpEventListeners();
   },
-  next: function () {
+  next: () => {
     if (modal.position === employeeData.length - 1) {
       modal.position = 0;
     } else {
@@ -78,7 +65,7 @@ const modal = {
     }
     modal.render(modal.position);
   },
-  previous: function () {
+  previous: () => {
     if (modal.position === 0) {
       modal.position = employeeData.length - 1;
     } else {
@@ -86,15 +73,15 @@ const modal = {
     }
     modal.render(modal.position);
   },
-  setUpEventListeners: function () {
-    document.querySelector(".close").addEventListener("click", function () {
+  setUpEventListeners: () => {
+    document.querySelector(".close").addEventListener("click", () => {
       document.querySelector('body').style.overflow = "scroll";
       overlay.style.display = "none";
     });
-    document.querySelector(".close").addEventListener("mouseover", function () {
+    document.querySelector(".close").addEventListener("mouseover", () => {
       document.querySelector(".modal").style.opacity = ".7";
     });
-    document.querySelector(".close").addEventListener("mouseout", function () {
+    document.querySelector(".close").addEventListener("mouseout", () => {
       document.querySelector(".modal").style.opacity = "1";
     });
 
@@ -107,29 +94,25 @@ const modal = {
 
 //cards methods
 const cards = {
-  render: function () {
-    let employeeHTML = "";
+  render: () => {
+    let employeeHTML =``;
 
-    $.each(employeeData, function (i, employee) {
-      employeeHTML += '<div class="employee-card">';
-      employeeHTML += '<img src="' + employee.picture.large + '">';
-      employeeHTML += "<ul>";
-      employeeHTML +=
-        "<li>" +
-        uppercase(employee.name.first) +
-        " " +
-        uppercase(employee.name.last) +
-        "</li>";
-      employeeHTML += "<li>" + employee.email + "</li>";
-      employeeHTML += "<li>" + uppercase(employee.location.city) + "</li>";
-      employeeHTML += "</ul>";
-      employeeHTML += "</div>";
+    $.each(employeeData, (i, employee) => {
+      employeeHTML+= 
+      `<div class="employee-card">
+      <img src="${employee.picture.large}">
+        <ul>
+          <li>${uppercase(employee.name.first)} ${uppercase(employee.name.last)}</li>
+          <li>${uppercase(employee.email)}</li>
+          <li>${uppercase(employee.location.city)}</li>
+        </ul>
+      </div>`;
     });
 
     $(".main-container").html(employeeHTML);
     cards.setUpEventListeners();
   },
-  index: function (target) {
+  index: (target) => {
     let items = employeesHTML.children;
 
     for (let i = items.length - 1; i >= 0; i--) {
@@ -138,7 +121,7 @@ const cards = {
       }
     }
   },
-  filter: function (value) {
+  filter: (value) => {
 
     let employeeCards = document.querySelectorAll(".employee-card");
 
@@ -156,7 +139,7 @@ const cards = {
       }
     }
   },
-  setUpEventListeners: function () {
+  setUpEventListeners: () => {
     $(".main-container").on("click", ".employee-card", function (el) {
       let index = cards.index(this);
       searchInput.value = '';
@@ -164,9 +147,9 @@ const cards = {
       document.querySelector('body').style.overflow = "hidden";
       modal.render(index);
     });
-    searchInput.addEventListener("input", function () {
+    searchInput.addEventListener("input", () => {
 
-      cards.filter(this.value.toLowerCase());
+      cards.filter(searchInput.value.toLowerCase());
     });
   }
 };
