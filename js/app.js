@@ -39,17 +39,18 @@ const modal = {
     let employeeHTML =
       `<div class="modal">
         <span class="close">&times;</span>
-        <span class="arrow arrow-right"> &rarr; </span>
-        <span class="arrow arrow-left"> &larr; </span>
+        <span class="arrow arrow-right">&rarr;</span>
+        <span class="arrow arrow-left">&larr;</span>
         <img src="${employeeData[index].picture.large}">
         <ul>
-            <li>${uppercase(employeeData[index].name.first)} ${uppercase(employeeData[index].name.last)} </li>
-            <li>${employeeData[index].email}</li>
-            <li>${uppercase(employeeData[index].location.city)}</li>     
-        <hr>
-            <li>${employeeData[index].cell}</li>
-            <li>${uppercase(employeeData[index].location.street)}, ${uppercase(employeeData[index].location.state)} ${employeeData[index].location.postcode}</li>
-            <li>Birthday: ${dob()}</li>
+          <li>${uppercase(employeeData[index].name.first)} ${uppercase(employeeData[index].name.last)} </li>
+          <li>${employeeData[index].login.username}</li>
+          <li>${uppercase(employeeData[index].location.city)}</li>     
+          <hr>
+          <li>${employeeData[index].email}</li>
+          <li>${employeeData[index].cell}</li>
+          <li>${uppercase(employeeData[index].location.street)}, ${uppercase(employeeData[index].location.state)} ${employeeData[index].location.postcode}</li>
+          <li>Birthday: ${dob()}</li>
         </ul>
       </div>`;
 
@@ -86,24 +87,22 @@ const modal = {
     });
 
     document.querySelector(".arrow-right").addEventListener("click", modal.next);
-
     document.querySelector(".arrow-left").addEventListener("click", modal.previous);
   }
 };
 
-
 //cards methods
 const cards = {
   render: () => {
-    let employeeHTML =``;
+    let employeeHTML = ``;
 
     $.each(employeeData, (i, employee) => {
-      employeeHTML+= 
-      `<div class="employee-card">
+      employeeHTML +=
+        `<div class="employee-card">
       <img src="${employee.picture.large}">
         <ul>
           <li>${uppercase(employee.name.first)} ${uppercase(employee.name.last)}</li>
-          <li>${uppercase(employee.email)}</li>
+          <li>${uppercase(employee.login.username)}</li>
           <li>${uppercase(employee.location.city)}</li>
         </ul>
       </div>`;
@@ -122,20 +121,16 @@ const cards = {
     }
   },
   filter: (value) => {
-
     let employeeCards = document.querySelectorAll(".employee-card");
 
     for (let i = 0; i < employeeCards.length; i++) {
       let ul = employeeCards[i].getElementsByTagName("UL")[0];
-      let employee = ul.getElementsByTagName("LI")[0];
-      employee = employee.innerText.toLowerCase();
-
-      if (employee.indexOf(value) > -1) {
+      let employeeName = ul.getElementsByTagName("LI")[0].innerText.toLowerCase();
+      let employeeUsername = ul.getElementsByTagName("LI")[1].innerText.toLowerCase();
+      if (employeeName.indexOf(value) > -1 || employeeUsername.indexOf(value) > -1) {
         employeeCards[i].style.display = "flex";
-
       } else {
         employeeCards[i].style.display = "none";
-
       }
     }
   },
@@ -148,7 +143,6 @@ const cards = {
       modal.render(index);
     });
     searchInput.addEventListener("input", () => {
-
       cards.filter(searchInput.value.toLowerCase());
     });
   }
